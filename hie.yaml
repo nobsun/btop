@@ -1,0 +1,19 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "btop:lib"
+
+    - path: "./app/Main.hs"
+      component: "btop:exe:btop"
+
+    - path: "./app/Paths_btop.hs"
+      component: "btop:exe:btop"
+
+    - path: "./app/mexpr/Main.hs"
+      component: "btop:exe:mexpr"
+
+    - path: "./app/mexpr/Paths_btop.hs"
+      component: "btop:exe:mexpr"
+
+    - path: "./test"
+      component: "btop:test:btop-doctest"
