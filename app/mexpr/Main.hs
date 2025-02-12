@@ -25,7 +25,7 @@ main = do
     }
 
 sample1 :: MExpr (Expr Hs)
-sample1 = m₁ e₁ e₁
+sample1 = m₁ (tracing $ variable e₁ e₁)
 
 sample2 :: AMExpr
 sample2 = decode @(MExpr (Expr Hs)) @AMExpr sample1

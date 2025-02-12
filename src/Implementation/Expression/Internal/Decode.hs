@@ -15,8 +15,6 @@
 module Implementation.Expression.Internal.Decode
     where
 
-import Data.Functor.Foldable
-
-class (Recursive a, Corecursive a) => Decode c a where
+class Decode c a where
     encode :: a -> c
     decode :: c -> a

@@ -156,3 +156,37 @@ True
 >>> sample12 == sample5
 True
 -}
+
+-- ## 変数
+
+newtype Variable a = Variable a deriving (Eq, Show)
+
+variable :: Expr Hs -> Expr Hs -> Variable (Expr Hs)
+variable s t = Variable (e₂ e₁ (e₂ s t))
+
+data AVariable = AVariable AExpr AExpr deriving (Eq)
+
+instance Decode (Variable (Expr Hs)) AVariable where
+    encode :: AVariable -> Variable (Expr Hs)
+    encode = \ case
+        AVariable s t -> variable (encode s) (encode t)
+
+    decode :: Variable (Expr Hs) -> AVariable
+    decode = \ case
+        Variable e -> case branches e of
+            [_,t]      -> case branches t of
+                [ss, ts] -> AVariable (decode ss) (decode ts)
+                _        -> error "decode: impossible"
+            _ -> error "decode: impossible"
+
+instance Show AVariable where
+    showsPrec :: Int -> AVariable -> ShowS
+    showsPrec _ = \ case
+        AVariable s t -> shows s . showChar 'V' . shows t
+
+instance Read AVariable where
+    readsPrec :: Int -> ReadS AVariable
+    readsPrec _ = readP_to_S rAVariable
+
+rAVariable :: ReadP AVariable
+rAVariable = uncurry AVariable <$> between (char '(') (char ')') ((,) <$> rAExpr <* char 'V' <*> rAExpr)

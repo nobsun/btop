@@ -38,8 +38,9 @@ instance TreeLike (MExpr (Expr Hs)) where
                 | otherwise -> [MExpr s, MExpr t]
             _ -> error "branches @(MExpr (Expr Hs)): impossible"
 
-m₁ :: Expr Hs -> Expr Hs -> MExpr (Expr Hs)
-m₁ s t = MExpr (e₂ e₁ (e₂ s t))
+m₁ :: Variable (Expr Hs) -> MExpr (Expr Hs)
+m₁ = \ case
+    Variable e -> MExpr (e₂ e₁ e)
 
 m₂ :: MExpr (Expr Hs)
 m₂ = MExpr (e₂ e₁ e₁)
@@ -56,14 +57,14 @@ sizeMExpr = sizeAMExpr . decode
 -- ## M式のAST
 
 data AMExprF r
-    = VarF AExpr AExpr
+    = VarF AVariable
     | NullF
     | SharpF r
     | PairF r r
     deriving (Eq, Functor)
 
 data AMExpr
-    = Var AExpr AExpr
+    = Var AVariable
     | Null
     | Sharp AMExpr
     | Pair AMExpr AMExpr
@@ -74,7 +75,7 @@ type instance Base AMExpr = AMExprF
 instance Recursive AMExpr where
     project :: AMExpr -> Base AMExpr AMExpr
     project = \ case
-        Var s t  -> VarF s t
+        Var v    -> VarF v
         Null     -> NullF
         Sharp t  -> SharpF t
         Pair s t -> PairF s t
@@ -82,7 +83,7 @@ instance Recursive AMExpr where
 instance Corecursive AMExpr where
     embed :: Base AMExpr AMExpr -> AMExpr
     embed = \ case
-        VarF s t  -> Var s t
+        VarF v    -> Var v
         NullF     -> Null
         SharpF t  -> Sharp t
         PairF s t -> Pair s t
@@ -92,7 +93,7 @@ instance Decode (MExpr (Expr Hs)) AMExpr where
     encode = cata phi
         where
             phi = \ case
-                VarF s t  -> m₁ (encode s) (encode t)
+                VarF v    -> m₁ (encode v)
                 NullF     -> m₂
                 SharpF t  -> m₃ t
                 PairF s t -> m₄ s t
@@ -104,9 +105,9 @@ instance Decode (MExpr (Expr Hs)) AMExpr where
             psi me@(MExpr e) = case branches me of
                 []    -> case branches e of
                     [_,t] -> case branches t of
-                        []      -> NullF
-                        [ss,tt] -> VarF (decode ss) (decode tt)
-                        _      -> error $ "decode @(MExpr (Expr Hs)) @AMExpr: impossible"
+                        []    -> NullF
+                        [ss,tt] -> VarF (decode (variable ss tt))
+                        _     -> error $ "decode @(MExpr (Expr Hs)) @AMExpr: impossible"
                     _       -> error $ "decode @(MExpr (Expr Hs)) @AMExpr: impossible"
                 [t]   -> SharpF t
                 [s,t] -> PairF s t
@@ -117,7 +118,7 @@ instance Show AMExpr where
     showsPrec _ = cata phi
         where
             phi = \ case
-                VarF s t  -> shows s . showChar 'V' . shows t
+                VarF v    -> shows v
                 NullF     -> ('(' :) . (')' :)
                 SharpF t  -> ('#' :) . showParen True t
                 PairF s t -> showParen True (s . showChar '.' . t)
@@ -130,7 +131,7 @@ rAMExpr :: ReadP AMExpr
 rAMExpr = rVar +++ rNull +++ rSharp +++ rPair
 
 rVar :: ReadP AMExpr
-rVar = Var <$> rAExpr <* char 'V' <*> rAExpr
+rVar = Var <$> rAVariable
 
 rNull :: ReadP AMExpr
 rNull = Null <$ string "()"

@@ -127,41 +127,44 @@ l − x = case l of
 
 vs :: AMExpr -> ALst
 vs me = case me of
-    Var _ _      -> ACons me AEmpty
+    Var _        -> ACons me AEmpty
     Null         -> AEmpty
     Sharp me₀    -> vs me₀
     Pair me₁ me₂ -> vs me₁ ⊕ vs me₂
 
 vs₁ :: AMExpr -> ALst
 vs₁ me = case me of
-    Var _ _      -> ACons me AEmpty
+    Var _        -> ACons me AEmpty
     Null         -> AEmpty
     Sharp _      -> AEmpty
     Pair me₁ me₂ -> vs₁ me₁ ⊕ vs₁ me₂
 
 vs₂ :: AMExpr -> ALst
 vs₂ me = case me of
-    Var _ _      -> AEmpty
+    Var _        -> AEmpty
     Null         -> AEmpty
-    Sharp me₀    -> vs₂ me₀
+    Sharp me₀    -> vs me₀
     Pair me₁ me₂ -> vs₂ me₁ ⊕ vs₂ me₂
 
 {-
 >>> sample1 = l₁
 >>> sample1
 Lst (MExpr (Expr ○●●))
+
 >>> sample2 = decode @(Lst (MExpr (Expr Hs))) @ALst sample1
 >>> sample2
 ()
 >>> sample1 == encode sample2
 True
+
 >>> sample2 == read (show sample2)
 True
->>> sample3 = l₂ (m₁ e₁ e₁) l₁
+
+>>> sample3 = l₂ (m₁ (variable e₁ e₁)) l₁
 >>> sample3
-Lst (MExpr (Expr ○○●○●●○●●))
+Lst (MExpr (Expr ○○●○●○●●○●●))
 
 >>> sample4 = decode @(Lst (MExpr (Expr Hs))) @ALst sample3
 >>> sample4
-(Var ● ●,())
+(●V(●.●),())
 -}
