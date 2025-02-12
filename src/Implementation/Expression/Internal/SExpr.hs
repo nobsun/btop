@@ -15,11 +15,11 @@
 module Implementation.Expression.Internal.SExpr
     where
 
-import Data.Functor.Foldable
 import Text.ParserCombinators.ReadP
+import Data.Functor.Foldable
+import Implementation.Decode
+import Implementation.TreeLike
 import Implementation.Expression.Hosi
-import Implementation.Expression.Internal.Decode
-import Implementation.Expression.Internal.TreeLike
 import Implementation.Expression.Internal.Expr
 import Implementation.Expression.Internal.MExpr
 

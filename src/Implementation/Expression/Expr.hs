@@ -17,8 +17,6 @@ module Implementation.Expression.Expr
     , module MExpr
     , module VarList
     , module SExpr
-    , module TreeLike
-    , module Decode
     ) where
 
 import Implementation.Expression.Internal.Expr as Expr hiding (Expr)
@@ -31,5 +29,3 @@ import Implementation.Expression.Internal.CExpr as CExpr hiding (CExpr)
 import Implementation.Expression.Internal.CExpr as CExpr (CExpr ())
 import Implementation.Expression.Internal.SExpr as SExpr hiding (SExpr)
 import Implementation.Expression.Internal.SExpr as SExpr (SExpr ())
-import Implementation.Expression.Internal.TreeLike as TreeLike
-import Implementation.Expression.Internal.Decode as Decode

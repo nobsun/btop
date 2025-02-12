@@ -1,4 +1,4 @@
--- # Implementation.Expression.Internal.Decode
+-- # Implementation.Decode
 -- Decode クラス
 -- 
 -- ## 言語拡張と`module`宣言
@@ -12,7 +12,7 @@
 {-# LANGUAGE DataKinds, PolyKinds, NoStarIsType, TypeFamilyDependencies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedRecordDot, NoFieldSelectors, DuplicateRecordFields #-}
-module Implementation.Expression.Internal.Decode
+module Implementation.Decode
     where
 
 class Decode c a where

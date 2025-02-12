@@ -4,14 +4,13 @@
 {-# LANGUAGE LexicalNegation #-}
 {-# LANGUAGE LambdaCase, MultiWayIf #-}
 {-# LANGUAGE NPlusKPatterns #-}
-{-# LANGUAGE DataKinds, PolyKinds, NoStarIsType, TypeFamilyDependencies #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE OverloadedRecordDot, NoFieldSelectors, DuplicateRecordFields #-}
+{-# LANGUAGE DataKinds, PolyKinds, NoStarIsType #-}
 module Main where
 
 import Data.Bool
 import Implementation.Expression.Hosi
 import Implementation.Expression.Expr
+import Implementation.Decode
 
 import Debug.Trace qualified as Debug
 

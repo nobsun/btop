@@ -1,4 +1,4 @@
--- # Implementation.Expression.Internal.TreeLike
+-- # Implementation.TreeLike
 -- TreeLikeクラス
 -- 
 -- ## 言語拡張と`module`宣言
@@ -12,7 +12,7 @@
 {-# LANGUAGE DataKinds, PolyKinds, NoStarIsType, TypeFamilyDependencies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedRecordDot, NoFieldSelectors, DuplicateRecordFields #-}
-module Implementation.Expression.Internal.TreeLike
+module Implementation.TreeLike
     where
 
 import Data.Functor.Foldable
