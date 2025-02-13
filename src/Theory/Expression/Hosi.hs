@@ -1,8 +1,7 @@
 -- # Theory.Expression.Hosi
--- このファイルは`stack new`コマンドで自動的に`src/`に挿入されます
 -- 
 -- ## 言語拡張と`module`宣言
--- 最低限の指定をしてある
+-- 
 {-# LANGUAGE GHC2021 #-}
 {-# LANGUAGE ImplicitParams #-}
 {-# LANGUAGE ImportQualifiedPost #-}
@@ -13,14 +12,33 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedRecordDot, NoFieldSelectors, DuplicateRecordFields #-}
 module Theory.Expression.Hosi
-    ( someFunc
-    ) where
+    where
 
--- ## `doctest`のための記述と定義本体
-{- | 
-「なんか関数」を標準出力に印字する
->>> someFunc
-なんか関数
--}
-someFunc :: IO ()
-someFunc = putStrLn "なんか関数"
+import Implementation.Expression.Hosi
+import Theory.Sing
+
+data instance Sing (h :: Hosi) where
+    SKuro :: Sing 'Kuro
+    SSiro :: Sing 'Siro
+
+type SHosi (h :: Hosi) = Sing (h :: Hosi)
+
+instance SingKind Hosi where
+    type Demote Hosi = Hosi
+    toSing :: Demote Hosi -> SomeSing Hosi
+    toSing = \ case
+        Kuro -> SomeSing SKuro
+        Siro -> SomeSing SSiro
+    fromSing :: Sing (h :: Hosi) -> Demote Hosi
+    fromSing = \ case
+        SKuro -> Kuro
+        SSiro -> Siro
+
+instance SingI 'Kuro where
+    sing :: Sing 'Kuro
+    sing = SKuro
+
+instance SingI 'Siro where
+    sing :: Sing 'Siro
+    sing = SSiro
+

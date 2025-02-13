@@ -68,7 +68,6 @@ rSiro = pure Siro <* char '○'
 {-
 >>> read @Hs "ε"
 ε
-
 >>> read @Hs "●"
 ●
 >>> read @Hs "○"
